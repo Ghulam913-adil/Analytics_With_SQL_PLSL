@@ -1,0 +1,16 @@
+The Commands Related to the GitHub :.................................
+
+..... git clone : then past the https/ link from your github  main repository so that you can have access to your github pages and work....
+-------------------------------------------------------------------------------------------------------------------------------------------
+1: ---- git clone https://github.com/Ghulam913-adil/Ghulam_BigData_Demo.git.
+ 
+1: git status ----- helps to check the status of the git repository comletely
+2: git add . ------ helps to add the files to load and prepare to commit and push
+3: git commit -m " wrie your message" ---------- helps to commit( accept the changes made to te files
+4: git push origin main ------------ helps to push the files to the main of the repository 
+
+As there are other commands thats helps to resolve the issues likes....
+1: if  the files are not pushed and gives an error to not able to connect, the there must be another person in the collaborator who make changes to he file in the main repository files
+Solution : first pull the files from the main repository as : git pull origin main.
+2: then continue from the start as git add . vice versa ...
+

@@ -106,7 +106,35 @@ FROM
     TABLE ( e.phone_address ) p;
 /
 
-
+------------------------Using Pl/SQL -------------------------------------------------
+set serveroutput on;
+/
+DECLARE
+  p_num phone_list_array2;
+BEGIN
+  SELECT PHONE_ADDRESS 
+  INTO   p_num 
+  FROM   employee_phone_address_book2 
+  WHERE  employee_id = 2021;
+  
+  p_num.extend;
+  p_num(4) := phone_number_address2('FAX','999.99.9999');
+  
+  UPDATE employee_phone_address_book2 
+  SET    PHONE_ADDRESS = p_num
+  WHERE  employee_id  = 2021;
+END;
+/
+SELECT
+    e.employee_id,
+    e.first_name,
+    e.last_name,
+    p.phone,
+    p.phone_address
+FROM
+    employee_phone_address_book2 e,
+    TABLE ( e.phone_address ) p;
+/
 
 
 
