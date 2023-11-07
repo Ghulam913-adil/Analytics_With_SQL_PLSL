@@ -216,3 +216,26 @@ begin
     end loop;
   close c_emps;
 end;
+----------------------------- Going back in cursor -------------------------------------------------------
+
+set serveroutput on;
+/
+declare
+
+c_id employees.employee_id%type;
+v_first_name employees.first_name%type;
+
+cursor c_emps is select employee_id, first_name from employees where department_id=30;
+begin
+    open c_emps;
+    loop
+        fetch c_emps into c_id, v_first_name;
+        exit when c_emps%notfound;
+        dbms_output.put_line(c_id || ': '|| v_first_name);
+        end loop;
+        close c_emps;
+end;
+
+/
+
+select * from employees;
