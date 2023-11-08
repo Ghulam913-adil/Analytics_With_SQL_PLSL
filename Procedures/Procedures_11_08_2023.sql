@@ -1,34 +1,63 @@
---------------------------------------------------------------------------------
---------------------Procedures To Increase Salary Of Employee-------------------
-set serveroutput ON;
+----------------- Creating a procedure
+set SERVEROUTPUT on;
 /
-create or replace procedure increase_salary as
+create procedure increase_salaries as
     cursor c_emps is select * from employees_copy for update;
-    v_salary_increase pls_integer := 1.10;
-    v_old_salary pls_integer;
-    
-    begin
-        for i in c_emps 
-        loop
-            v_old_salary := i.salary;
-            i.salary := i.salary * v_salary_increase + i.salary * nvl(i.commission_pct,0);
-            update employees_copy set row=i where current of c_emps;
-            dbms_output.put_line(' The salary of '|| i.first_name || 
-                                ' With EMP_ID >: '|| i.employee_id||
-                                ' is increased from :>-- '|| v_old_salary||' to :>--- ' || i.salary);
-        end loop;
-end;
-/
----------------------Calling The Procedure: increase_salary
-execute increase_salary;
-/
+    v_salary_increase number := 1.10;
+    v_old_salary number;
 begin
-    dbms_output.put_line(' Procedure Starts Execution ......');
-    increase_salary;
-    dbms_output.put_line(' Procedure Execution Ends ........');
+    for r_emp in c_emps loop
+      v_old_salary := r_emp.salary;
+      r_emp.salary := r_emp.salary * v_salary_increase + r_emp.salary * nvl(r_emp.commission_pct,0);
+      update employees_copy set row = r_emp where current of c_emps;
+      dbms_output.put_line('The salary of : '|| r_emp.employee_id 
+                            || ' is increased from '||v_old_salary||' to '||r_emp.salary);
+    end loop;
 end;
 /
-
-
-
-            
+----------------- Multiple procedure usage
+begin
+  dbms_output.put_line('Increasing the salaries!...');
+  INCREASE_SALARIES;
+  INCREASE_SALARIES;
+  INCREASE_SALARIES;
+  INCREASE_SALARIES;
+  dbms_output.put_line('All the salaries are successfully increased!...');
+end;
+/
+----------------- Different procedures in one block
+begin
+  dbms_output.put_line('Increasing the salaries!...');
+  INCREASE_SALARIES;
+  new_line;
+  INCREASE_SALARIES;
+  new_line;
+  INCREASE_SALARIES;
+  new_line;
+  INCREASE_SALARIES;
+  dbms_output.put_line('All the salaries are successfully increased!...');
+end;
+/
+-----------------Creating a procedure to ease the dbms_output.put_line procedure 
+create procedure new_line as
+begin
+  dbms_output.put_line('------------------------------------------');
+end;
+/
+-----------------Modifying the procedure with using the OR REPLACE command.
+create or replace procedure increase_salaries as
+    cursor c_emps is select * from employees_copy for update;
+    v_salary_increase number := 1.10;
+    v_old_salary number;
+begin
+    for r_emp in c_emps loop
+      v_old_salary := r_emp.salary;
+      r_emp.salary := r_emp.salary * v_salary_increase + r_emp.salary * nvl(r_emp.commission_pct,0);
+      update employees_copy set row = r_emp where current of c_emps;
+      dbms_output.put_line('The salary of : '|| r_emp.employee_id 
+                            || ' is increased from '||v_old_salary||' to '||r_emp.salary);
+    end loop;
+    dbms_output.put_line('Procedure finished executing!');
+end
+/
+--------------------------------------------------------------------------------
