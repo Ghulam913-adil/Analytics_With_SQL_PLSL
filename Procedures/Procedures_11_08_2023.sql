@@ -134,5 +134,24 @@ begin
  PRINT('SALARY INCREASE FINISHED!..');
 end;                                                     
 /
------------------------------------------------------------------------------------------------------------------------
+--------------<<<<<<<<<<<<---------------->>>>>>>>>>>>--------------------------
+---------------------- Default Procedure ---------------------------------------
 
+-----------------Procedure creation of a default value usage
+create or replace procedure add_job(job_id pls_integer, job_title varchar2, 
+                                    min_salary number default 1000, max_salary number default null) is
+begin
+  insert into jobs values (job_id,job_title,min_salary,max_salary);
+  print('The job : '|| job_title || ' is inserted!..');
+end;
+/
+----------- calling the procedure add_job
+begin
+    print(' Adding New Job started .....');
+    add_job(913,'Data Analyst');
+        print(' Adding New Job Ended .....');
+end;
+/
+DELETE FROM jobs WHERE job_id='913';
+/
+--------------------------------------------------------------------------------
