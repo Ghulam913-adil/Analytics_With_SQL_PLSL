@@ -275,3 +275,53 @@ begin
           where rowid = r_emps.rowid;
   end loop;  
 end;
+--------------------------------------------------------------------------------------------------------------------
+
+set SERVEROUTPUT ON;
+/
+declare
+    cursor c_emps is select * from employees_copy for update;
+    v_increase pls_integer := 1.10;
+    v_old_salary pls_integer;
+begin
+    for i in c_emps
+    loop
+        v_old_salary := i.salary;
+        i.salary := i.salary * v_increase + i.salary* nvl(i.commission_pct,0);
+        update employees_copy set row = i where current of c_emps;
+        dbms_output.put_line('The Salary of EMP_ID: '|| i.employee_id|| ' is increased from :' 
+                                                     || v_old_salary|| ' to :>- '|| i.salary);
+    end loop;
+end;
+/
+------------------------- Conditions--------------------------------------------
+declare
+    cursor c_emps is select * from employees_copy for update;
+    v_salary_increase pls_integer := 1.10;
+    v_old_salary  pls_integer;
+    v_new_salary pls_integer;
+    v_maximum_salary pls_integer:= 20000;
+begin
+    for i in c_emps
+    loop
+        v_old_salary := i.salary;
+        v_new_salary := i.salary*v_salary_increase+i.salary*nvl(i.commission_pct,0);
+        
+        if v_new_salary > v_maximum_salary
+        then
+            RAISE_APPLICATION_ERROR(-20009,' The salary of '|| i.first_name||
+                                           ' with EMP_ID : '|| i.employee_id || 
+                                            ' cannot be increased from:>: '||v_maximum_salary);
+        end if;
+        i.salary := i.salary*v_salary_increase+i.salary*nvl(i.commission_pct,0);
+        update employees_copy set row=i where current of c_emps;
+        dbms_output.put_line(' The salary of '|| i.first_name || 'with EMP_ID : '
+                                              || i.employee_id ||' is increased from :> ' 
+                                              || v_old_salary ||' to >:-- ' || i.salary);
+    end loop;
+end;
+/
+
+
+        
+        
