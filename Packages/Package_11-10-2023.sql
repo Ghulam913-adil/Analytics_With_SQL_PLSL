@@ -2,6 +2,46 @@
 -------------------- Packages and package Body ---------------------------------
 --------------------<<<<<<<<<<<<>>>>>>>>>>>>>>>>>-------------------------------
 
+create or replace PACKAGE employee_info_pkg IS
+  -- Define the record type
+  TYPE t_emp IS RECORD (
+    first_name VARCHAR2(50),
+    last_name employees.last_name%TYPE,
+    salary employees.salary%TYPE,
+    hire_date DATE
+  );
+  -- Declare the procedure to fetch and display employee information
+  PROCEDURE get_employee_info(employee_id_param IN employees.employee_id%TYPE);
+
+END employee_info_pkg;
+---- package Body-----
+CREATE OR REPLACE PACKAGE BODY employee_info_pkg IS
+  -- Implement the procedure
+  PROCEDURE get_employee_info(employee_id_param IN employees.employee_id%TYPE) IS
+    r_emp t_emp; -- Declare the record variable
+
+  BEGIN
+    SELECT first_name, last_name, salary, hire_date 
+    INTO r_emp 
+    FROM employees 
+    WHERE employee_id = employee_id_param;
+
+    -- Output the fetched employee information
+    dbms_output.put_line(r_emp.first_name || ' ' || 
+                         r_emp.last_name || ' earns ' || 
+                         r_emp.salary || ' and was hired on: ' || 
+                         TO_CHAR(r_emp.hire_date, 'DD-MON-YY'));
+                         
+  END get_employee_info;
+
+END employee_info_pkg;
+
+
+
+
+
+
+
 -------------create a package
 create or replace package High_Sal_Emp AS
 
