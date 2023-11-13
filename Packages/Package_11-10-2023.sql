@@ -90,5 +90,7 @@ BEGIN
     High_Sal_Emp.process_high_salary_emp;
 END;
 /
+    commit;
+/
 select * from high_salary_emp;
 ----------------------------------------------------------------------------------------------------------------------
