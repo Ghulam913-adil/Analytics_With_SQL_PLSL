@@ -95,7 +95,54 @@ CREATE OR REPLACE PACKAGE BODY employee_info_pkg2 IS
 END employee_info_pkg2;
 /
 
+set serveroutput ON;
+/
+create table retired_employees as select * from employees where 1=2;
+/
 
+create or replace package retired_emp as
+    c_emps employees%rowtype;
+    function retired_function(emp_id employees.employee_id%TYPE)RETURN employees%rowtype;
+    procedure retired( emp_id in employees.employee_id%type);
+    procedure logic_emp;
+end retired_emp;
+/
+create or replace package body retired_emp as
+
+      
+---- Create a function inside a procedure
+        FUNCTION retired_function( emp_id employees.employee_id%TYPE)return employees%rowtype IS 
+        v_emps employees%rowtype;
+          begin
+                select * into v_emps from employees where employee_id=emp_id;
+                return v_emps;
+          end retired_function;
+          
+---- Create a Procedure
+        procedure retired(emp_id in employees.employee_id%type) AS
+      v_emps employees%rowtype;
+    begin
+        v_emps:=retired_function(emp_id);
+        insert into retired_employees values v_emps;
+    end retired;
+
+---- Create logic for the retuired empeloyees having commission_pct is null....
+    procedure logic_emp IS
+        begin
+            for i in (select * from employees) loop
+                if i.commission_pct is null then 
+                    retired(i.employee_id);
+                end if;
+            end loop;
+        end logic_emp;
+
+end retired_emp;/
+
+execute retired_emp.logic_emp;
+/
+select * from employees;
+/
+select * from retired_employees;
 
 
 
