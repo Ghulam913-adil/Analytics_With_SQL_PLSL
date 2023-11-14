@@ -199,3 +199,106 @@ END;
 /
 select * from high_salary_emp;
 ----------------------------------------------------------------------------------------------------------------------
+--------<<<<<< VArray in Packages >>>>>>>>>>>>>>>>>>------------------------------------------------------------------
+
+create or replace package v_array1 as 
+    type e_list is VARRAY(5) of varchar2(50);
+    employees e_list;
+    
+    type list_empty is varray(20) OF varchar2(50);
+    employees2 list_empty := list_empty();
+    
+    PROCEDURE varray_procedure;
+    PROCEDURE varray_count;    
+    PROCEDURE varray_first_last;
+    PROCEDURE varray_exist;
+    PROCEDURE varray_limit;
+    PROCEDURE initialize;
+    PROCEDURE empty_constructor_varray;
+
+end v_array1;
+/
+
+create or replace
+package body v_array1 as  
+    procedure varray_procedure as
+        begin
+        employees := e_list('Ghulam','Mujtaba','Adil','Khan','Rumi');
+        for i in 1 ..5 loop
+            dbms_output.put_line(employees(i));
+        end loop;
+    end varray_procedure;
+    
+    PROCEDURE varray_count as 
+        begin
+            dbms_output.put_line('This is the Count, when the array values are less then no error would be given but only the values ');
+            employees := e_list('Ghulam','Mujtaba','Adil','Khan');
+        for i in 1 .. employees.count() loop
+            dbms_output.put_line(employees(i));
+        end loop;
+    end varray_count;
+    
+    PROCEDURE varray_first_last as
+         begin
+            dbms_output.put_line('This is the first() and last() commands in varrays... ');
+            employees := e_list('Ghulam','Mujtaba','Adil','Khan');
+        for i in employees.first() .. employees.last() loop
+            dbms_output.put_line(employees(i));
+        end loop;
+    end varray_first_last;
+    
+    PROCEDURE varray_exist as
+        begin
+            dbms_output.put_line('This is the exit command...');
+            employees := e_list('Ghulam','Mujtaba','Adil','Khan');
+        for i in 1 .. 5 loop
+            if employees.exists(i) THEN
+                dbms_output.put_line(employees(i));
+            end if;
+        end loop;
+    end varray_exist;
+    
+     PROCEDURE varray_limit as
+        begin
+            employees := e_list('Ghulam','Mujtaba','Adil','Khan','Rumi');
+            dbms_output.put_line('Limit gives the size of the varray..');
+            dbms_output.put_line('The size of the varray e_list is: ' || employees.limit());
+        end varray_limit;
+        
+    PROCEDURE initialize as
+        employees e_list := e_list('Ghulam','Mujtaba','Adil','Khan','Rumi');
+        begin
+            dbms_output.put_line('Initialization and Declaration of the varray at the same time');
+            dbms_output.put_line('The size of the varray e_list is: ' || employees.limit());
+        end initialize;
+    
+    PROCEDURE empty_constructor_varray as
+        idx NUMBER :=1;
+        begin
+            dbms_output.put_line('Initialization and Declaration of Empty varray at the same time');
+            for i in 100 .. 110 loop
+                employees2.extend;
+                select first_name into employees2(idx) from employees where employee_id=i;
+                idx := idx+1;
+            end loop;
+            for j in 1 ..employees2.count() loop
+                dbms_output.put_line(employees2(j));
+            end loop;
+        end empty_constructor_varray;
+             
+end v_array1;
+/
+set SERVEROUTPUT ON;
+/
+execute v_array1.varray_procedure;
+execute v_array1.varray_count;
+execute v_array1.varray_first_last;
+execute v_array1.varray_exist;
+execute v_array1.varray_limit;
+execute v_array1.initialize;
+execute v_array1.empty_constructor_varray;
+
+/
+
+
+    
