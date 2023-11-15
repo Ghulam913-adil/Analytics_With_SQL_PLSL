@@ -426,4 +426,166 @@ create or replace package body associative_array2 as
 
 end associative_array2;
 /
+-----------------------------------------------------------------------------------------------------------------
+---------------------------<<<<<<<<<<<<>>>>>>>>>>>>>>>>------------------------------------------------------
+
+/
+
+create or replace PACKAGE associative_array1 as
+    type e_list is table of employees.first_name%type INDEX BY pls_integer;
+    emps e_list;
+    procedure associative1;
+end associative_array1;
+/
+create or replace package body associative_array1 as
+
+  procedure associative1 as
+  begin
+        for i in 100 .. 110 loop
+            select first_name into emps(i) from employees where employee_id=i;
+        end loop;
+        for j in emps.first() .. emps.last() loop
+            dbms_output.put_line(emps(j));
+        end LOOP;
+  end associative1;
+
+end associative_array1;
+/
+-------------------------------------------------------------------------------------
+create or replace PACKAGE associative_array2 as
+    type e_list is table of employees.first_name%type index by VARCHAR2(50);
+    emps e_list;
+    PROCEDURE associative2;
+end associative_array2;
+/
+create or replace package body associative_array2 as
+
+  procedure associative2 as
+  idx employees.email%type;
+  v_email employees.email%type;
+  v_first_name employees.first_name%type;
+  begin
+        for i in 100 .. 110 loop
+            select first_name, email into v_first_name, v_email from employees where employee_id = i;
+            emps(v_email) := v_first_name;
+        end loop;
+        
+        idx := emps.first;
+        while idx is not null loop
+            dbms_output.put_line(' the email of ' || emps(idx)||' is : ' || idx);
+            idx := emps.next(idx);
+        end loop;
+  end associative2;
+
+end associative_array2;
+/
+----------------------------------------------------------------------------------------
+
+create or replace PACKAGE associative_array_records as
+    type e_list is table of employees%rowtype index by employees.email%type;
+    emps e_list;
+    procedure associative_records;
+end associative_array_records;
+/
+create or replace package body associative_array_records as
+
+  procedure associative_records as
+  idx employees.email%type;
+  v_email employees.email%type;
+  v_first_name employees.first_name%type;
+  begin
+    for i in 100 .. 110 loop
+        select * into emps(i) from employees where employee_id=i;
+    end loop;
+
+    idx := emps.first;
+    while idx is not null loop
+        dbms_output.put_line('The Email of ' || emps(idx).first_name ||' '|| emps(idx).last_name || ' is :> ' || emps(idx).email);
+        idx := emps.next(idx);
+    end loop;
+    
+  end associative_records;
+
+end associative_array_records;
+/
+------------------------------------------------------------------------------------------------
+
+create or replace PACKAGE associative_array_withRecords as
+
+    type e_record is record( employee_id employees.employee_id%type,
+                             first_name employees.first_name%type, 
+                             last_name employees.last_name%type, 
+                             email employees.email%type);
+    type e_list is table of e_record index by pls_integer;
+    emps e_list;
+
+    procedure associative_with_Records;
+end associative_array_withRecords;
+/
+create or replace package body associative_array_withrecords as
+
+  procedure associative_with_records as
+  
+  idx employees.email%type;
+  v_employee_id employees.employee_id%type;
+  v_email employees.email%type;
+  v_first_name employees.first_name%type;
+  v_last_name employees.last_name%TYPE;
+  begin
+    for i in 100 .. 110 loop
+        select employee_id,first_name, last_name, email into emps(i) from employees where employee_id=i;
+    end loop;
+    
+    idx := emps.first;
+    while idx is not NULL LOOP
+        dbms_output.put_line(emps(idx).employee_id||''||
+                                      ' The Email of '|| emps(idx).first_name || ' ' 
+                                      || emps(idx).last_name || ' is :> ' || emps(idx).email);
+        idx := emps.next(idx);
+    end loop;
+        
+  end associative_with_records;
+
+end associative_array_withrecords;
+/
+---------------------------------------------------------------------------------------------
+create or replace PACKAGE associative_array_printfromlast as
+
+    type e_record is record( employee_id employees.employee_id%type,
+                             first_name employees.first_name%type, 
+                             last_name employees.last_name%type, 
+                             email employees.email%type);
+    type e_list is table of e_record index by pls_integer;
+    emps e_list;
+
+    procedure associative_printfromlast;
+end associative_array_printfromlast;
+/
+create or replace package body associative_array_printfromlast as
+
+  procedure associative_printfromlast as
+  
+  idx employees.email%type;
+  v_employee_id employees.employee_id%type;
+  v_email employees.email%type;
+  v_first_name employees.first_name%type;
+  v_last_name employees.last_name%TYPE;
+  begin
+    for i in 100 .. 110 loop
+        select employee_id,first_name, last_name, email into emps(i) from employees where employee_id=i;
+    end loop;
+    
+    --emps.delete(100,104);
+    idx := emps.last;
+    while idx is not NULL LOOP
+        dbms_output.put_line(emps(idx).employee_id||''||
+                                      ' The Email of '|| emps(idx).first_name || ' ' 
+                                      || emps(idx).last_name || ' is :> ' || emps(idx).email);
+        idx := emps.prior(idx);
+    end loop;
+        
+  end associative_printfromlast;
+
+end associative_array_printfromlast;
+-----------------------------------------------------------------------------------------------------------------
 
