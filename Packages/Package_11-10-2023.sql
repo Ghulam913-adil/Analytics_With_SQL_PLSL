@@ -588,4 +588,43 @@ create or replace package body associative_array_printfromlast as
 
 end associative_array_printfromlast;
 -----------------------------------------------------------------------------------------------------------------
+---------- Insert Data by Date using Associative Array ----------------------------------------------------------
+create table employee_salary_history as select * from employees where 1=2;
+/
+alter table employee_salary_history add insert_date date;
+/
+select * from employee_salary_history;
+/
+--------------------------------------------------------------------------------
+--------------------- Create a package -----------------------------------------
+create or replace package employees_history as
+    type emp_hist is table of employee_salary_history%rowtype index by PLS_INTEGER;
+    emps emp_hist;
+    PROCEDURE employee_sal;
+end employees_history;
+/
+
+create or replace package body employees_history as
+
+  procedure employee_sal as
+      idx pls_integer;
+      begin
+            for i in 100 .. 110 loop
+                select e.*,'16-Nov-2023' into emps(i) from employees e where employee_id=i;
+            end loop;
+            
+            idx := emps.first;
+            while idx is not null LOOP
+                emps(idx).salary := emps(idx).salary + emps(idx).salary *0.2;
+                insert into employee_salary_history values emps(idx);
+                dbms_output.put_line(' The Data of an Employee : '|| emps(idx).first_name || ' is inserted into the table employee_salary_history');
+                idx := emps.next(idx);
+            end loop;
+  end employee_sal;
+
+end employees_history;
+
+/
+
+select * from employee_salary_history;
 
