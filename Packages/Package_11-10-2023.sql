@@ -300,5 +300,130 @@ execute v_array1.empty_constructor_varray;
 
 /
 
+---------------------------------------------------------------------------------------------------------------------
+------------------------- Associative Nested tables with packages ----------------------------------------------------
 
-    
+create or replace PACKAGE nested_table as 
+    type e_list is table of varchar2(50);
+    employees e_list;
+    procedure nested1;
+end nested_table;
+/
+create or replace package body nested_table as
+
+  procedure nested1 as
+  begin
+        employees := e_list('Ghulam', 'Mujtaba');
+        for i in 1.. employees.count() loop
+            dbms_output.put_line(employees(i));
+        end loop;
+  end nested1;
+
+end nested_table;
+/
+
+create or replace PACKAGE nested_table3 as
+    type e_list is table of varchar(50);
+    employees e_list;
+    procedure e_list_empty;
+END nested_table3;
+/
+create or replace package body nested_table3 as
+
+  procedure e_list_empty as
+    employees e_list := e_list();
+    idx pls_integer := 1;
+  begin
+        for i in 100 .. 110 loop
+            employees.extend;
+            select first_name into employees(idx) from employees where employee_id=i;
+            idx := idx+1;
+        end loop;
+        for j in 1 .. employees.count() loop
+            dbms_output.put_line(employees(j));
+        end loop;
+  end e_list_empty;
+
+end nested_table3;
+/
+
+create or replace PACKAGE nested_table4 as
+    type e_list is table of VARCHAR2(50);
+    employees e_list;
+    procedure delete_employee;
+end nested_table4;
+/
+create or replace package body nested_table4 as
+
+  procedure delete_employee as
+  employees e_list := e_list();
+  idx PLS_INTEGER := 1;
+  begin
+    for i in 100 .. 110 loop
+        employees.extend;
+        select first_name into employees(idx) from employees where employee_id=i;
+        idx := idx+1;
+    end loop;
+    employees.delete(2);
+    for j in 1 .. employees.count() loop
+        if employees.exists(j) THEN 
+            dbms_output.put_line(employees(j));
+        end if;
+    end loop;
+
+  end delete_employee;
+
+end nested_table4;
+/
+
+----------------------------------------------------------------------------------------------------------------------
+-------------------------- Associative Arrays with packages-------------------------------------------------------
+create or replace PACKAGE associative_array1 as
+    type e_list is table of employees.first_name%type INDEX BY pls_integer;
+    emps e_list;
+    procedure associative1;
+end associative_array1;
+/
+create or replace package body associative_array1 as
+
+  procedure associative1 as
+  begin
+        for i in 100 .. 110 loop
+            select first_name into emps(i) from employees where employee_id=i;
+        end loop;
+        for j in emps.first() .. emps.last() loop
+            dbms_output.put_line(emps(j));
+        end LOOP;
+  end associative1;
+
+end associative_array1;
+/
+
+create or replace PACKAGE associative_array2 as
+    type e_list is table of employees.first_name%type index by VARCHAR2(50);
+    emps e_list;
+    PROCEDURE associative2;
+end associative_array2;
+/
+create or replace package body associative_array2 as
+
+  procedure associative2 as
+  idx employees.email%type;
+  v_email employees.email%type;
+  v_first_name employees.first_name%type;
+  begin
+        for i in 100 .. 110 loop
+            select first_name, email into v_first_name, v_email from employees where employee_id = i;
+            emps(v_email) := v_first_name;
+        end loop;
+        
+        idx := emps.first;
+        while idx is not null loop
+            dbms_output.put_line(' the email of ' || emps(idx)||' is : ' || idx);
+            idx := emps.next(idx);
+        end loop;
+  end associative2;
+
+end associative_array2;
+/
+
