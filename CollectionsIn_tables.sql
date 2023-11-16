@@ -78,7 +78,12 @@ update employes_phone_details_table set phone_number =v_phone_table
                                                                      ) where empoyee_id =914;
 /
 select e.empoyee_id,e.first_name, e.last_name, p.p_type,p.p_number from employes_phone_details_table e, table(e.phone_number) p;
+/
 
+ This is just lokking wowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.
+
+ -------------------------------------------------------------
+ 
 
 
 
