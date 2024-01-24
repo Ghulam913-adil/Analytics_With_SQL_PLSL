@@ -3,12 +3,15 @@ The Commands Related to the GitHub:.................................
 git clone: then past the HTTPS/link from your GitHub main repository so that you can have access to your GitHub pages and work...
 -------------------------------------------------------------------------------------------------------------------------------------------
 1: git clone https://github.com/Ghulam913-adil/Ghulam_BigData_Demo.git.
- 
+1.1: git init --- when you want the folder in the desktop or any other folder to be placed in the github repository
 1: git status ----- helps to check the status of the git repository completely
+...
 2: git add. ------ helps to add the files to load and prepare to commit and push
 3: git commit -m " write your message" ---------- helps to commit( accept the changes made to the files).
 4: git push origin main ------------ helps push the files to the main of the repository 
-
+5: git config --global user.email " ghulam.mujtabadil001@gmail.com" ------ Use the commands when there is a need of the email.
+6: git config --global user.name "Ghulam_BigData_Demo" ------ Use the commands when there is a need of the user name.
+7: 
 <<<<<<< HEAD
 As there are other commands thats helps to resolve the issues likes....
 1: if  the files are not pushed and gives an error to not able to connect, the there must be another person in the collaborator who make changes to he file in the main repository files
