@@ -24,6 +24,7 @@ Solution : first pull the files from the main repository as : git pull origin ma
                               -----when you a re in the current branch with green highlighted. 
 ---------------------------then continue from the begining as from adding to the pushing..........
 =======
+4: git remote add origin " past the othert repository link you want to add "------------------------------ when you want to add the other repositories othert than main
 There are other commands that help resolve the issues, like...
 1: if  the files are not pushed and give an error to not able to connect, 
 then there must be another person in the collaborator who make changes to the file in the main repository files
