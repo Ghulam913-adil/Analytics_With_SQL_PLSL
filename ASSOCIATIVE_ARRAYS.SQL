@@ -1,0 +1,116 @@
+/*=========================================================================================================
+|  Title:         Assocoative Arrays Practice 
+|  Description:   Practicing different scenarios with Assocoative Arrays, including DML operations like insert, delete, and update.
+|  Author:        Adil Khan Rumi
+|  Date Created:  27-DEC-2024
+|  Last Updated:  -DEC-2024
+|  Version:       19.0
+|
+|  Notes:         
+|  - Ensure compatibility with Oracle 19c.
+|  - The EMPLOYEES and DEPARTMENTS tables must exist in the schema.
+===========================================================================================================
+*/
+SET SERVEROUTPUT ON;
+/
+DECLARE
+    TYPE ASSOCIATIVE_ARRAY IS TABLE OF EMPLOYEES.FIRST_NAME%TYPE INDEX BY PLS_INTEGER;
+    EMPS ASSOCIATIVE_ARRAY;
+    
+BEGIN
+    FOR I IN 100 .. 110 
+    LOOP
+        SELECT FIRST_NAME INTO EMPS(I) FROM EMPLOYEES WHERE EMPLOYEE_ID = I;
+    END LOOP;
+    
+    FOR J IN EMPS.FIRST .. EMPS.LAST
+    LOOP
+        DBMS_OUTPUT.PUT_LINE(EMPS(J));
+    END LOOP;
+END;
+/
+ -- ##### WHEN THE KEYS ARE NOT SEQUENTIAL ########
+ 
+ DECLARE
+    TYPE A_ARRAY IS TABLE OF EMPLOYEES.FIRST_NAME%TYPE INDEX BY PLS_INTEGER;
+    V_EMPS A_ARRAY;
+    V_INDEX PLS_INTEGER;
+BEGIN
+    V_EMPS(100) := 'ADIL';
+    V_EMPS(120) := 'RUMI';
+    
+    V_INDEX := V_EMPS.FIRST;
+    
+    WHILE V_INDEX IS NOT NULL
+    LOOP
+        DBMS_OUTPUT.PUT_LINE(V_EMPS(V_INDEX));
+        V_INDEX :=V_EMPS.NEXT(V_INDEX);
+    END LOOP;
+END;
+/
+---- #### USING DIFFERENT INDEXES LIKE VARCHAR2()....
+
+DECLARE
+    TYPE A_ARRAY IS TABLE OF EMPLOYEES.FIRST_NAME%TYPE INDEX BY VARCHAR2(100);
+    EMPS A_ARRAY;
+    
+    V_INDEX EMPLOYEES.EMAIL%TYPE;
+    
+    V_EMAIL EMPLOYEES.EMAIL%TYPE;
+    V_FIRST_NAME EMPLOYEES.FIRST_NAME%TYPE;
+    
+BEGIN
+    FOR I IN 100 .. 110
+    LOOP
+    
+        SELECT FIRST_NAME, EMAIL INTO V_FIRST_NAME, V_EMAIL FROM EMPLOYEES WHERE EMPLOYEE_ID = I;
+        EMPS(V_EMAIL) := V_FIRST_NAME;
+    END LOOP;
+    
+    V_INDEX := EMPS.FIRST;
+    
+    WHILE V_INDEX IS NOT NULL
+    LOOP
+        DBMS_OUTPUT.PUT_LINE(' THE EMAIL OF ' || EMPS(V_INDEX)|| ' IS ' || V_INDEX);
+        V_INDEX := EMPS.NEXT(V_INDEX);
+    END LOOP;
+END;
+/
+
+----- ##### INSERTING THE DATA INTO THE TABLE USING ASSOCIATIVE_ARRAYS ....
+
+CREATE TABLE ASSOCIATIVE_ARRAY AS SELECT FIRST_NAME, EMAIL FROM EMPLOYEES WHERE 1=2;
+/
+DECLARE
+    TYPE A_ARRAY IS TABLE OF EMPLOYEES.FIRST_NAME%TYPE INDEX BY VARCHAR2(100);
+    EMPS A_ARRAY;
+    
+    V_INDEX EMPLOYEES.EMAIL%TYPE;
+    
+    V_EMAIL EMPLOYEES.EMAIL%TYPE;
+    V_FIRST_NAME EMPLOYEES.FIRST_NAME%TYPE;
+    
+BEGIN
+    FOR I IN 100 .. 110
+    LOOP
+    
+        SELECT FIRST_NAME, EMAIL INTO V_FIRST_NAME, V_EMAIL FROM EMPLOYEES WHERE EMPLOYEE_ID = I;
+        EMPS(V_EMAIL) := V_FIRST_NAME;
+    END LOOP;
+    
+    V_INDEX := EMPS.FIRST;
+    
+    WHILE V_INDEX IS NOT NULL
+    LOOP
+        DBMS_OUTPUT.PUT_LINE(' THE EMAIL ' || EMPS(V_INDEX)|| ' HAS BEEN INSERTED INTO THE TABLE ASSOCIATIVE_ARRAY WITH FIRST_NAME ' || V_INDEX);
+        
+        INSERT INTO ASSOCIATIVE_ARRAY (FIRST_NAME, EMAIL)
+        VALUES (EMPS(V_INDEX),V_INDEX);
+        
+        V_INDEX := EMPS.NEXT(V_INDEX);
+    END LOOP;
+END;
+/
+
+SELECT * FROM ASSOCIATIVE_ARRAY;
+/
