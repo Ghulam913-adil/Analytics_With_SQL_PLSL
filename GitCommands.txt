@@ -35,4 +35,14 @@ Solution: first pull the files from the main repository as git pull origin main.
 2: then continue from the start as git add. vice versa ...
 
 >>>>>>> 6dc41c70d741d38065a12942dcf55f1900afcad9
-H this is Adil
+1. GIT --VERSION ## THIS COMMAND HELPS TO CHECK THE VERSION OF GIT
+2. git clone https://github.com/Ghulam913-adil/PLSQL.git  ## git clone command helps to clone specific github repository 
+3. git add . ## THIS COMMAND ADD THE FILE TO THE REPOSIRITY WITH THE CONTENTS IN IT 
+
+## IF THERE IS NEED TO ADD USERNAME AND EMAIL TO COMMI THE CHANGES
+4.1. git config --global user.email "you@example.com" ## ADD THE EMAIL EXAMPLE: ghulam.mujtabadil001@gmail.com
+4.2. git config --global user.name "Your Name"	## ADD THE USERNAME IN GITHUB RELEVANT REPOSIROTY EXAMPLE: Ghulam913-adil
+
+5. git commit -m "ANY MESSAGE YOU WANT TO ADD" # GIT COMMIT USE TO COMMIT THE CHANGES DONE AND THE FILE WILL BE AVAILABLE IN THE REPOSITORY WITH THE CHANGES.
+6. git push origin main # THIS COMMANDS HELPS TO PUSH THE CHANGES TO THE MAIN REPOSIROTY. 
+
